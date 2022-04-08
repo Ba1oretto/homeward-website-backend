@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.homeward.website.mapper.PostMapper">
+    <cache eviction="LRU" size="512"/>
+    <resultMap id="postPreview" type="PostPreview">
+        <result column="slug" property="slug"/>
+        <result column="title" property="title"/>
+        <result column="excerpt" property="excerpt"/>
+        <result column="feature_image" property="featureImage"/>
+        <result column="tag" property="tag"/>
+        <result column="tag_color" property="tagColor"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="countBlogPosts" resultType="Integer" useCache="true">
+        select count(*) from post_attribute
+    </select>
+    <select id="selectBlogPagePosts" resultMap="postPreview" useCache="true" parameterType="Page">
+        select slug, title, excerpt, feature_image, tag, tag_color, create_time from post_attribute inner join
+        <trim prefix="(" suffix=")">
+            select id from post_attribute order by create_time desc limit
+            <choose>
+                <when test="_parameter.getPageNum() != 1">
+                    <bind name="pageNumber" value="_parameter.getPageNum() * _parameter.getPageSize()"/>
+                    #{pageNumber}, #{pageSize}
+                </when>
+                <otherwise>
+                    1, #{pageSize}
+                </otherwise>
+            </choose>
+        </trim>
+        t2 using (id)
+    </select>
+
+    <select id="selectHomeShowcasePosts" resultMap="postPreview" useCache="true">
+        select slug, title, excerpt, feature_image, tag, tag_color, create_time from post_attribute as t1,
+        (select id from post_attribute order by create_time desc limit 3) as t2
+        where t1.id = t2.id
+    </select>
+</mapper>

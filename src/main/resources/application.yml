@@ -1,0 +1,37 @@
+server:
+  port: 50012
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://ba1oretto.com:3306/minecraft_webstore?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true
+    username: remote
+    password: sd;lawmd;ls1=1]ro90-2Sjm20050406
+    hikari:
+      max-lifetime: 300000
+  thymeleaf:
+    check-template-location: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 50
+        max-wait: 3000ms
+        max-idle: 20
+        min-idle: 2
+    timeout: 5000ms
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  type-aliases-package: com.homeward.website.bean
+  mapper-locations: classpath:/mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+logging:
+  level:
+    com.homeward.website.mapper: debug
