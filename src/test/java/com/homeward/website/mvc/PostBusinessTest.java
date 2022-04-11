@@ -21,24 +21,28 @@ public class PostBusinessTest {
 
     @Test
     void testSelectBlogPagePosts() {
-        Page page = new Page().setPageNum(114).setPageSize(8);
+        Page page = new Page().setPageNum(1).setPageSize(3);
         Integer pageNum = page.getPageNum();
         Integer pageSize = page.getPageSize();
-        List<PostPreview> result = postMapper.selectBlogPagePosts(page);
 
+        List<PostPreview> result = postMapper.selectBlogPagePosts(page);
         Integer total = postMapper.countBlogPosts();
 
-        int pageSum = total / pageSize;
-        Integer next = pageNum + 1 == pageSum ? null : pageNum + 1;
+        int rawPageSum = total / pageSize;
+        int pageSum = total % pageSize == 0 ? rawPageSum : rawPageSum + 1;
+        Integer next = pageNum == pageSum ? null : pageNum + 1;
         Integer prev = pageNum == 1 ? null : pageNum - 1;
 
-        page.setTotal(total).setPageSum(pageSum).setNext(next).setPrev(prev).setPosts(result);
+        System.out.println("total: " + total);
+        System.out.println("rawPageSum: " + rawPageSum);
+        System.out.println("pageSum: " + pageSum);
+        System.out.println("next: " + next);
+        System.out.println("prev: " + prev);
+        System.out.println("result: " + result);
     }
 
     @Test
-    void testSelectHomeShowcasePosts() {
-        List<PostPreview> postPreviews = postService.selectHomeShowcasePosts();
-        assert !postPreviews.isEmpty();
+    void testPostsSelector() {
     }
 }
 

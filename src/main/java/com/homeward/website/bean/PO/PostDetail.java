@@ -1,17 +1,14 @@
 package com.homeward.website.bean.PO;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 @Data
-@Accessors(chain = true)
-public class PostPreview implements Serializable {
-    private String slug;
+public class PostDetail implements Serializable {
     private String title;
-    private String excerpt;
     private String featureImage;
     private PostTag tag;
+    private String html;
     private String createTime;
 }

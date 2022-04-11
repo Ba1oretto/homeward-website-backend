@@ -3,40 +3,65 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.homeward.website.mapper.PostMapper">
-    <cache eviction="LRU" size="512"/>
-    <resultMap id="postPreview" type="PostPreview">
-        <result column="slug" property="slug"/>
-        <result column="title" property="title"/>
-        <result column="excerpt" property="excerpt"/>
-        <result column="feature_image" property="featureImage"/>
-        <result column="tag" property="tag"/>
-        <result column="tag_color" property="tagColor"/>
-        <result column="create_time" property="createTime"/>
+<!--    <cache eviction="LRU" size="512"/>-->
+
+    <resultMap id="postPreview" type="PostPreview" autoMapping="true">
+        <collection property="tag" ofType="PostTag" autoMapping="true"/>
+    </resultMap>
+    <resultMap id="postDetail" type="PostDetail" autoMapping="true">
+        <collection property="tag" ofType="PostTag" autoMapping="true"/>
     </resultMap>
 
-    <select id="countBlogPosts" resultType="Integer" useCache="true">
-        select count(*) from post_attribute
-    </select>
     <select id="selectBlogPagePosts" resultMap="postPreview" useCache="true" parameterType="Page">
-        select slug, title, excerpt, feature_image, tag, tag_color, create_time from post_attribute inner join
-        <trim prefix="(" suffix=")">
-            select id from post_attribute order by create_time desc limit
+        select
+            t2.name, t2.accent_color color, t3.slug, t3.title, t3.custom_excerpt excerpt, t3.feature_image featureImage, t3.published_at createTime
+        from
+            (select post_id, tag_id from homeward_prod.posts_tags) as t1,
+            homeward_prod.tags as t2,
+            homeward_prod.posts as t3
+        where
+            t3.featured = 1 and t1.tag_id = t2.id and t1.post_id = t3.id
+        order by
+            t3.created_at desc
+        limit
             <choose>
-                <when test="_parameter.getPageNum() != 1">
-                    <bind name="pageNumber" value="_parameter.getPageNum() * _parameter.getPageSize()"/>
+                <when test="_parameter.getPageNum() > 1">
+                    <bind name="pageNumber" value="(_parameter.getPageNum() - 1) * _parameter.getPageSize()"/>
                     #{pageNumber}, #{pageSize}
                 </when>
                 <otherwise>
-                    1, #{pageSize}
+                    0, #{pageSize}
                 </otherwise>
             </choose>
-        </trim>
-        t2 using (id)
     </select>
 
-    <select id="selectHomeShowcasePosts" resultMap="postPreview" useCache="true">
-        select slug, title, excerpt, feature_image, tag, tag_color, create_time from post_attribute as t1,
-        (select id from post_attribute order by create_time desc limit 3) as t2
-        where t1.id = t2.id
+    <select id="postSelector" resultMap="postPreview" useCache="true" parameterType="PostSelector">
+        select
+            t2.name, t2.accent_color color, t3.slug, t3.title, t3.feature_image featureImage, t3.published_at createTime
+        from
+            (select post_id, tag_id from homeward_prod.posts_tags) as t1,
+            homeward_prod.tags as t2,
+            homeward_prod.posts as t3
+        where
+            t3.featured = 1 and t1.tag_id = t2.id and t1.post_id = t3.id
+        order by
+            t3.created_at desc
+        limit
+            <if test="offset != null">#{offset},</if> #{records}
+    </select>
+
+    <select id="selectPostDetail" resultMap="postDetail" parameterType="String">
+        select
+            t1.title, t1.feature_image, t2.name, t2.accent_color color, t1.published_at create_time, t1.html
+        from
+            homeward_prod.posts as t1,
+            homeward_prod.tags as t2,
+            (select post_id, tag_id from homeward_prod.posts_tags) as t3
+        where
+            t3.post_id = t1.id and t2.id = t3.tag_id and t1.slug = #{slug}
+    </select>
+
+    <select id="countBlogPosts" resultType="Integer" useCache="true">
+        select count(*) from homeward_prod.posts where featured = 1
     </select>
 </mapper>
