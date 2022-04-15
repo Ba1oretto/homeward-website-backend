@@ -103,6 +103,6 @@ public class CustomExceptionAdvice {
                 }
             }
         }
-        return R.ok(res);
+        return res;
     }
 }

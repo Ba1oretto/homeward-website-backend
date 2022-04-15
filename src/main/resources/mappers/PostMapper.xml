@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.homeward.website.mapper.PostMapper">
-<!--    <cache eviction="LRU" size="512"/>-->
+    <cache eviction="LRU" size="512"/>
 
     <resultMap id="postPreview" type="PostPreview" autoMapping="true">
         <collection property="tag" ofType="PostTag" autoMapping="true"/>
@@ -16,9 +16,9 @@
         select
             t2.name, t2.accent_color color, t3.slug, t3.title, t3.custom_excerpt excerpt, t3.feature_image featureImage, t3.published_at createTime
         from
-            (select post_id, tag_id from homeward_prod.posts_tags) as t1,
-            homeward_prod.tags as t2,
-            homeward_prod.posts as t3
+            (select post_id, tag_id from homeward_ghost.posts_tags) as t1,
+            homeward_ghost.tags as t2,
+            homeward_ghost.posts as t3
         where
             t3.featured = 1 and t1.tag_id = t2.id and t1.post_id = t3.id
         order by
@@ -39,9 +39,9 @@
         select
             t2.name, t2.accent_color color, t3.slug, t3.title, t3.feature_image featureImage, t3.published_at createTime
         from
-            (select post_id, tag_id from homeward_prod.posts_tags) as t1,
-            homeward_prod.tags as t2,
-            homeward_prod.posts as t3
+            (select post_id, tag_id from homeward_ghost.posts_tags) as t1,
+            homeward_ghost.tags as t2,
+            homeward_ghost.posts as t3
         where
             t3.featured = 1 and t1.tag_id = t2.id and t1.post_id = t3.id
         order by
@@ -54,14 +54,14 @@
         select
             t1.title, t1.feature_image, t2.name, t2.accent_color color, t1.published_at create_time, t1.html
         from
-            homeward_prod.posts as t1,
-            homeward_prod.tags as t2,
-            (select post_id, tag_id from homeward_prod.posts_tags) as t3
+            homeward_ghost.posts as t1,
+            homeward_ghost.tags as t2,
+            (select post_id, tag_id from homeward_ghost.posts_tags) as t3
         where
             t3.post_id = t1.id and t2.id = t3.tag_id and t1.slug = #{slug}
     </select>
 
     <select id="countBlogPosts" resultType="Integer" useCache="true">
-        select count(*) from homeward_prod.posts where featured = 1
+        select count(*) from homeward_ghost.posts where featured = 1
     </select>
 </mapper>
