@@ -1,0 +1,3 @@
+logging:
+  level:
+    com.homeward.website.mapper: error

@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @EnableAsync
 @EnableTransactionManagement
-public class WebsiteBackendApplication {
+public class WebsiteSystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebsiteBackendApplication.class, args);
+        SpringApplication.run(WebsiteSystemApplication.class, args);
     }
 
 }
