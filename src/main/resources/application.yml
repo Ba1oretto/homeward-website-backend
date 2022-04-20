@@ -3,7 +3,7 @@ server:
 
 spring:
   config:
-    import: application-production.yml
+    import: application-development.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://ba1oretto.com:3306?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true

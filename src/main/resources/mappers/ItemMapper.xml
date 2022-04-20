@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.homeward.website.mapper.ItemMapper">
+    <cache eviction="LRU" size="512"/>
+
+    <resultMap id="itemPreview" type="ItemPreview" autoMapping="true">
+        <collection property="itemList" ofType="ItemPreviewCollection" autoMapping="true"/>
+    </resultMap>
+    <select id="selectItemsListByCategory" parameterType="String" resultMap="itemPreview" useCache="true">
+        select
+            amount, group_name,
+            price, discount, discount_percent,
+            image_regular, image_hover
+        from
+            homeward_webstore.item
+        where
+            category = #{category}
+        order by
+            of_group, amount
+    </select>
+</mapper>

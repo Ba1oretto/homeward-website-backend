@@ -21,7 +21,7 @@ public class JwtUtils {
     /**
      * 密钥
      */
-    private static final String SECRET = SystemConst.PROJECT_NAME.getInformation() + "_xxBAIORETTOxx";
+    private static final String SECRET = SystemConst.PROJECT_NAME.value() + "_xxBAIORETTOxx_";
 
     /**
      * 过期时间(单位: 毫秒)
@@ -78,17 +78,7 @@ public class JwtUtils {
      * 获取用户userId
      * @return uuid
      */
-    public static String getUUID() {
-        HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
-
-        String token = request.getHeader(HEADER_KEY);
-        if (StringUtils.isBlank(token)) {
-            CommonUtils.throwRuntimeException(StatusEnum.JWT_NOT_FOUND);
-        }
-        if (!token.startsWith(PREFIX)) {
-            CommonUtils.throwRuntimeException(StatusEnum.WRONG_PREFIX);
-        }
-        token = token.replace(PREFIX, "");
+    public static String getValue(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
@@ -97,10 +87,9 @@ public class JwtUtils {
                 CommonUtils.throwRuntimeException(StatusEnum.JWT_HAS_EXPIRED);
             }
             return jwt.getClaim(UUID).asString();
-        } catch (Exception e) {
-            log.error("token verified error, {}", e.getMessage());
+        } catch (Exception ignore) {
+            return null;
         }
-        throw new RuntimeException(StatusEnum.JWT_HAS_EXPIRED.getMessage());
     }
 
 

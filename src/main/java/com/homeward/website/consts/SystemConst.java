@@ -3,36 +3,17 @@ package com.homeward.website.consts;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum SystemConst implements BaseConst{
-    /**
-     * 项目名称
-     */
-    PROJECT_NAME("webstore"),
-
-    /**
-     * 玩家购物车
-     */
-    PLAYER_CART("_cart"),
-
-    /**
-     * 玩家session
-     */
-    PLAYER_SESSION("_session"),
-
-    /**
-     * 请求头中令牌的key
-     */
+public enum SystemConst implements BaseConst {
+    PROJECT_NAME("homeward"),
+    PROJECT_DOMAIN("store.fantang.com"),
+    PLAYER_IDENTIFY("homeward-player"),
     AUTHORIZATION_NAME("Authorization"),
-
-    /**
-     * 请求头中令牌的value开头
-     */
     AUTHORIZATION_PREFIX("Bearer ");
 
-    private final String name;
+    private final String value;
 
     @Override
-    public String getInformation() {
-        return name;
+    public String value() {
+        return value;
     }
 }
