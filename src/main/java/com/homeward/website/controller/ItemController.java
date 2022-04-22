@@ -16,8 +16,13 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public R selectItemsList(@PathVariable("category") String category) {
         return R.ok(itemService.selectItemsList(category));
+    }
+
+    @GetMapping("/package/{id}")
+    public R selectItemPackage(@PathVariable("id") String id) {
+        return R.ok(itemService.selectItemPackage(id));
     }
 }

@@ -1,10 +1,13 @@
 package com.homeward.website.dao;
 
+import com.homeward.website.bean.PO.ItemPackage;
+import com.homeward.website.bean.PO.ItemCart;
 import com.homeward.website.bean.PO.PostDetail;
 import com.homeward.website.bean.PO.PostPreview;
 import com.homeward.website.bean.VO.Page;
 import com.homeward.website.bean.VO.Player;
 import com.homeward.website.bean.VO.PostSelector;
+import com.homeward.website.mapper.CartMapper;
 import com.homeward.website.mapper.ItemMapper;
 import com.homeward.website.mapper.PlayerMapper;
 import com.homeward.website.mapper.PostMapper;
@@ -23,6 +26,8 @@ public class MysqlTest {
     private PlayerMapper playerMapper;
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private CartMapper cartMapper;
 
     @Test
     void testSelectBlogPagePosts() {
@@ -66,5 +71,17 @@ public class MysqlTest {
     void testSelectItemsList() {
         String category = "crate";
         itemMapper.selectItemsListByCategory(category).forEach((System.out::println));
+    }
+
+    @Test
+    void testSelectItemPackage() {
+        ItemPackage itemPackage = itemMapper.selectItemPackageById("1ae541e990d340798a2077525b752d2c");
+        System.out.println(itemPackage);
+    }
+
+    @Test
+    void testSelectPackageInCartById() {
+        ItemCart itemPackageInCart = cartMapper.selectItemCartDetailById("");
+        assert itemPackageInCart == null;
     }
 }

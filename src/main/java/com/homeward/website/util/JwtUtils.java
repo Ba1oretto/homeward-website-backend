@@ -97,6 +97,7 @@ public class JwtUtils {
      * 校验token
      * @return boolean
      */
+    @Deprecated
     public static boolean verity() {
         HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
         // 从请求头部中获取token信息

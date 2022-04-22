@@ -5,12 +5,10 @@
 <mapper namespace="com.homeward.website.mapper.ItemMapper">
     <cache eviction="LRU" size="512"/>
 
-    <resultMap id="itemPreview" type="ItemPreview" autoMapping="true">
-        <collection property="itemList" ofType="ItemPreviewCollection" autoMapping="true"/>
-    </resultMap>
+    <resultMap id="itemPreview" type="ItemPreview" autoMapping="true"/>
     <select id="selectItemsListByCategory" parameterType="String" resultMap="itemPreview" useCache="true">
         select
-            amount, group_name,
+            id, amount, group_name,
             price, discount, discount_percent,
             image_regular, image_hover
         from
@@ -19,5 +17,19 @@
             category = #{category}
         order by
             of_group, amount
+    </select>
+
+    <resultMap id="itemPackage" type="ItemPackage" autoMapping="true"/>
+    <select id="selectItemPackageById" useCache="true" resultMap="itemPackage">
+        select
+            t1.id, t1.amount, t1.name, t1.category, t1.price, t1.discount, t1.discount_percent, t1.image_regular,
+            t2.description
+        from
+            (select id, amount, name, category, price, discount, discount_percent, image_regular, of_group
+                from homeward_webstore.item where id = #{id}) as t1,
+            (select id, description
+                from homeward_webstore.item_description) as t2
+        where
+            t1.of_group = t2.id
     </select>
 </mapper>
