@@ -1,10 +1,13 @@
 package com.homeward.website.controller;
 
+import com.homeward.website.bean.PO.ItemCart;
 import com.homeward.website.service.CartService;
 import com.homeward.website.util.JwtUtils;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -30,21 +33,16 @@ public class CartController {
     }
 
     @PutMapping("/reset")
-    public Boolean cartReset(String playerId) {
-        return cartService.cartReset(playerId);
-    }
-
-    @PutMapping("/count/pre")
-    public Long cartCount(String playerId) {
+    public Boolean itemReset(String playerId, String packageId) {
         String playerUUID = JwtUtils.getValue(playerId);
         if (playerUUID == null || playerUUID.isBlank()) return null;
-        return cartService.cartCount(playerUUID);
+        return cartService.itemReset(playerUUID, packageId);
     }
 
-    @PutMapping("/count/single")
-    public Long packageCount(String playerId, String packageId) {
+    @PutMapping("/preview")
+    public List<ItemCart> cartPreview(String playerId) {
         String playerUUID = JwtUtils.getValue(playerId);
         if (playerUUID == null || playerUUID.isBlank()) return null;
-        return cartService.packageCount(playerUUID, packageId);
+        return cartService.cartPreview(playerUUID);
     }
 }
